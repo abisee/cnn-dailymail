@@ -22,6 +22,7 @@ all_test_urls = "url_lists/all_test.txt"
 
 cnn_tokenized_stories_dir = "cnn_stories_tokenized"
 dm_tokenized_stories_dir = "dm_stories_tokenized"
+finished_files_dir = "finished_files"
 
 VOCAB_SIZE = 200000
 
@@ -152,7 +153,7 @@ def write_to_bin(url_file, out_file, makevocab=False):
   # write vocab to file
   if makevocab:
     print "Writing vocab file..."
-    with open("finished_files/vocab", 'w') as writer:
+    with open(os.path.join(finished_files_dir, "vocab"), 'w') as writer:
       for word, count in vocab_counter.most_common(VOCAB_SIZE):
         writer.write(word + ' ' + str(count) + '\n')
     print "Finished writing vocab file"
@@ -166,6 +167,10 @@ if __name__ == '__main__':
   cnn_stories_dir = sys.argv[1]
   dm_stories_dir = sys.argv[2]
 
+  if not os.path.exists(cnn_tokenized_stories_dir): os.makedirs(cnn_tokenized_stories_dir)
+  if not os.path.exists(dm_tokenized_stories_dir): os.makedirs(dm_tokenized_stories_dir)
+  if not os.path.exists(finished_files_dir): os.makedirs(finished_files_dir)
+
   print "cnn stories dir: ", cnn_stories_dir
   print "dm stories dir: ", dm_stories_dir
 
@@ -174,6 +179,6 @@ if __name__ == '__main__':
   tokenize_stories(dm_stories_dir, dm_tokenized_stories_dir)
 
   # Read the tokenized stories, do a little postprocessing then write to bin files
-  write_to_bin(all_test_urls, "finished_files/test.bin")
-  write_to_bin(all_val_urls, "finished_files/val.bin")
-  write_to_bin(all_train_urls, "finished_files/train.bin", makevocab=True)
+  write_to_bin(all_test_urls, os.path.join(finished_files_dir, "test.bin"))
+  write_to_bin(all_val_urls, os.path.join(finished_files_dir, "val.bin"))
+  write_to_bin(all_train_urls, os.path.join(finished_files_dir, "train.bin"), makevocab=True)
