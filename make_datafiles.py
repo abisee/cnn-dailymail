@@ -124,7 +124,7 @@ def write_to_bin(url_file, out_file, makevocab=False):
       elif os.path.isfile(os.path.join(dm_tokenized_stories_dir, s)):
         story_file = os.path.join(dm_stories_dir, s)
       else:
-        raise Exception("can't find story file")
+        raise Exception("Tried to find tokenized story file %s in both directories %s and %s. Couldn't find it." % (s, cnn_tokenized_stories_dir, dm_tokenized_stories_dir))
 
       # Get the strings to write to .bin file
       article, abstract = get_art_abs(story_file)
