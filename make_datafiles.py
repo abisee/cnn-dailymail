@@ -120,9 +120,9 @@ def write_to_bin(url_file, out_file, makevocab=False):
 
       # Find the .story file corresponding to this url
       if os.path.isfile(os.path.join(cnn_tokenized_stories_dir, s)):
-        story_file = os.path.join(cnn_stories_dir, s)
+        story_file = os.path.join(cnn_tokenized_stories_dir, s)
       elif os.path.isfile(os.path.join(dm_tokenized_stories_dir, s)):
-        story_file = os.path.join(dm_stories_dir, s)
+        story_file = os.path.join(dm_tokenized_stories_dir, s)
       else:
         raise Exception("Tried to find tokenized story file %s in both directories %s and %s. Couldn't find it." % (s, cnn_tokenized_stories_dir, dm_tokenized_stories_dir))
 
@@ -162,7 +162,7 @@ def write_to_bin(url_file, out_file, makevocab=False):
 
 if __name__ == '__main__':
   if len(sys.argv) != 3:
-    print "USAGE: python stories_to_bin.py <cnn_stories_dir> <dailymail_stories_dir>"
+    print "USAGE: python make_datafiles.py <cnn_stories_dir> <dailymail_stories_dir>"
     sys.exit()
   cnn_stories_dir = sys.argv[1]
   dm_stories_dir = sys.argv[2]
