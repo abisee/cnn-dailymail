@@ -33,6 +33,6 @@ python make_datafiles.py /path/to/cnn/stories /path/to/dailymail/stories
 replacing `/path/to/cnn/stories` with the path to where you saved the `cnn/stories` directory that you downloaded; similarly for `dailymail/stories`.
 
 This script will do several things:
-* The directories `cnn_stories_tokenized` and `dm_stories_tokenized` will be created and filled with tokenized versions of `cnn/stories` and `dailymail/stories`. This may take some time.
+* The directories `cnn_stories_tokenized` and `dm_stories_tokenized` will be created and filled with tokenized versions of `cnn/stories` and `dailymail/stories`. This may take some time. ***Note**: you may see several `Untokenizable:` warnings from Stanford Tokenizer. These seem to be related to Unicode characters in the data; so far it seems OK to ignore them.*
 * For each of the url lists `all_train.txt`, `all_val.txt` and `all_test.txt`, the corresponding tokenized stories are read from file, lowercased and written to serialized binary files `train.bin`, `val.bin` and `test.bin`. These will be placed in the newly-created `finished_files` directory. This may take some time.
 * Additionally, a `vocab` file is created from the training data. This is also placed in `finished_files`.
