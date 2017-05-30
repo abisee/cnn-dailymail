@@ -23,12 +23,46 @@ all_test_urls = "url_lists/all_test.txt"
 cnn_tokenized_stories_dir = "cnn_stories_tokenized"
 dm_tokenized_stories_dir = "dm_stories_tokenized"
 finished_files_dir = "finished_files"
+chunks_dir = os.path.join(finished_files_dir, "chunked")
 
 # These are the number of .story files we expect there to be in cnn_stories_dir and dm_stories_dir
 num_expected_cnn_stories = 92579
 num_expected_dm_stories = 219506
 
 VOCAB_SIZE = 200000
+CHUNK_SIZE = 1000 # num examples per chunk, for the chunked data
+
+
+def chunk_file(set_name):
+  in_file = 'finished_files/%s.bin' % set_name
+  reader = open(in_file, "rb")
+  chunk = 0
+  finished = False
+  while not finished:
+    chunk_fname = os.path.join(chunks_dir, '%s_%03d.bin' % (set_name, chunk)) # new chunk
+    with open(chunk_fname, 'wb') as writer:
+      for _ in range(CHUNK_SIZE):
+        len_bytes = reader.read(8)
+        if not len_bytes:
+          finished = True
+          break
+        str_len = struct.unpack('q', len_bytes)[0]
+        example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
+        writer.write(struct.pack('q', str_len))
+        writer.write(struct.pack('%ds' % str_len, example_str))
+      chunk += 1
+
+
+def chunk_all():
+  # Make a dir to hold the chunks
+  if not os.path.isdir(chunks_dir):
+    os.mkdir(chunks_dir)
+  # Chunk the data
+  for set_name in ['train', 'val', 'test']:
+    print "Splitting %s data into chunks..." % set_name
+    chunk_file(set_name)
+  print "Saved chunked data in %s" % chunks_dir
+
 
 def tokenize_stories(stories_dir, tokenized_stories_dir):
   """Maps a whole directory of .story files to a tokenized version using Stanford CoreNLP Tokenizer"""
@@ -205,3 +239,6 @@ if __name__ == '__main__':
   write_to_bin(all_test_urls, os.path.join(finished_files_dir, "test.bin"))
   write_to_bin(all_val_urls, os.path.join(finished_files_dir, "val.bin"))
   write_to_bin(all_train_urls, os.path.join(finished_files_dir, "train.bin"), makevocab=True)
+
+  # Chunk the data. This splits each of train.bin, val.bin and test.bin into smaller chunks, each containing e.g. 1000 examples, and saves them in finished_files/chunks
+  chunk_all()
