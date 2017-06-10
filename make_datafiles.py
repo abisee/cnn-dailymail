@@ -9,8 +9,8 @@ from tensorflow.core.example import example_pb2
 
 dm_single_close_quote = u'\u2019'  # unicode
 dm_double_close_quote = u'\u201d'
-END_TOKENS = ['.', '!', '?', '...', "'", "`", '"', dm_single_close_quote, dm_double_close_quote,
-              ")"]  # acceptable ways to end a sentence
+# acceptable ways to end a sentence
+END_TOKENS = ['.', '!', '?', '...', "'", "`", '"', dm_single_close_quote, dm_double_close_quote, ")"]
 
 # We use these to separate the summary sentences in the .bin datafiles
 SENTENCE_START = '<s>'
@@ -84,7 +84,8 @@ def tokenize_stories(stories_dir, tokenized_stories_dir):
     num_tokenized = len(os.listdir(tokenized_stories_dir))
     if num_orig != num_tokenized:
         raise Exception(
-            "The tokenized stories directory %s contains %i files, but it should contain the same number as %s (which has %i files). Was there an error during tokenization?" % (
+            "The tokenized stories directory %s contains %i files, "
+            "but it should contain the same number as %s (which has %i files). Was there an error during tokenization?" % (
                 tokenized_stories_dir, num_tokenized, stories_dir, num_orig))
     print("Successfully finished tokenizing %s to %s.\n" % (stories_dir, tokenized_stories_dir))
 
@@ -119,9 +120,12 @@ def get_url_hashes(url_list):
 
 def fix_missing_period(line):
     """Adds a period to a line that is missing a period"""
-    if "@highlight" in line: return line
-    if line == "": return line
-    if line[-1] in END_TOKENS: return line
+    if "@highlight" in line:
+        return line
+    if line == "":
+        return line
+    if line[-1] in END_TOKENS:
+        return line
     # print line[-1]
     return line + " ."
 
@@ -160,7 +164,8 @@ def get_art_abs(story_file):
 
 
 def write_to_bin(url_file, out_file, makevocab=False):
-    """Reads the tokenized .story files corresponding to the urls listed in the url_file and writes them to a out_file."""
+    """Reads the tokenized .story files corresponding to the urls listed in the url_file
+        and writes them to a out_file."""
     print("Making bin file for URLs listed in %s..." % url_file)
     url_list = read_text_file(url_file)
     url_hashes = get_url_hashes(url_list)
@@ -184,16 +189,19 @@ def write_to_bin(url_file, out_file, makevocab=False):
                 print(s)
                 story_file = os.path.join(dm_tokenized_stories_dir, s)
             else:
-                print("Error: Couldn't find tokenized story file %s in either tokenized story directories %s and %s. Was there an error during tokenization?" % (
-                s, cnn_tokenized_stories_dir, dm_tokenized_stories_dir))
+                print(
+                    "Error: Couldn't find tokenized story file %s in either tokenized story directories %s and %s. "
+                    "Was there an error during tokenization?" % (
+                        s, cnn_tokenized_stories_dir, dm_tokenized_stories_dir))
                 # Check again if tokenized stories directories contain correct number of files
-                print("Checking that the tokenized stories directories %s and %s contain correct number of files..." % (
-                cnn_tokenized_stories_dir, dm_tokenized_stories_dir))
+                print("Checking that the tokenized stories directories %s and %s contain correct number of files..." %
+                      (cnn_tokenized_stories_dir, dm_tokenized_stories_dir))
                 check_num_stories(cnn_tokenized_stories_dir, num_expected_cnn_stories)
                 check_num_stories(dm_tokenized_stories_dir, num_expected_dm_stories)
                 raise Exception(
-                    "Tokenized stories directories %s and %s contain correct number of files but story file %s found in neither." % (
-                    cnn_tokenized_stories_dir, dm_tokenized_stories_dir, s))
+                    "Tokenized stories directories %s and %s contain correct number of files but story file %s found "
+                    "in neither." % (
+                        cnn_tokenized_stories_dir, dm_tokenized_stories_dir, s))
 
             # Get the strings to write to .bin file
             article, abstract = get_art_abs(story_file)
@@ -258,9 +266,12 @@ if __name__ == '__main__':
     check_num_stories(dm_stories_dir, num_expected_dm_stories)
 
     # Create some new directories
-    if not os.path.exists(cnn_tokenized_stories_dir): os.makedirs(cnn_tokenized_stories_dir)
-    if not os.path.exists(dm_tokenized_stories_dir): os.makedirs(dm_tokenized_stories_dir)
-    if not os.path.exists(finished_files_dir): os.makedirs(finished_files_dir)
+    if not os.path.exists(cnn_tokenized_stories_dir):
+        os.makedirs(cnn_tokenized_stories_dir)
+    if not os.path.exists(dm_tokenized_stories_dir):
+        os.makedirs(dm_tokenized_stories_dir)
+    if not os.path.exists(finished_files_dir):
+        os.makedirs(finished_files_dir)
 
     # Run stanford tokenizer on both stories dirs, outputting to tokenized stories directories
     tokenize_stories(cnn_stories_dir, cnn_tokenized_stories_dir)
