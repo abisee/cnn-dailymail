@@ -1,5 +1,7 @@
 This code produces the non-anonymized version of the CNN / Daily Mail summarization dataset, as used in the ACL 2017 paper *[Get To The Point: Summarization with Pointer-Generator Networks](https://arxiv.org/pdf/1704.04368.pdf)*. It processes the dataset into the binary format expected by the [code](https://github.com/abisee/pointer-generator) for the Tensorflow model.
 
+**Python 3 version**: This code is in Python 2. If you want a Python 3 version, see [@becxer's fork](https://github.com/becxer/cnn-dailymail/).
+
 # Option 1: download the processed data
 User @JafferWilson has provided the processed data, which you can download [here](https://github.com/JafferWilson/Process-Data-of-CNN-DailyMail). (See discussion [here](https://github.com/abisee/cnn-dailymail/issues/9) about why we do not provide it ourselves).
 
